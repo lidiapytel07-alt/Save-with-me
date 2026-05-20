@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moje oszczednosci</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="summary-panel" aria-labelledby="app-title">
+        <div class="title-row">
+          <div>
+            <p class="eyebrow">Prywatny licznik</p>
+            <h1 id="app-title">Moje oszczednosci</h1>
+          </div>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="Zmien motyw" title="Zmien motyw">
+            <span aria-hidden="true">T</span>
+          </button>
+        </div>
+
+        <div class="total-card" aria-live="polite">
+          <span>Razem</span>
+          <strong id="totalSavings">0,00 zl</strong>
+          <small id="itemsCount">0 pozycji</small>
+        </div>
+
+        <form class="goal-form" id="goalForm">
+          <label for="goalInput">Cel oszczedzania</label>
+          <div class="inline-control">
+            <input id="goalInput" name="goal" inputmode="decimal" placeholder="np. 25000" />
+            <button type="submit">Ustaw</button>
+          </div>
+        </form>
+
+        <div class="goal-status">
+          <div class="goal-line">
+            <span id="goalLabel">Cel nieustawiony</span>
+            <strong id="goalPercent">0%</strong>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-bar" id="goalProgress"></div>
+          </div>
+        </div>
+
+        <div class="mini-stats">
+          <div>
+            <span>Najwieksza pozycja</span>
+            <strong id="biggestItem">-</strong>
+          </div>
+          <div>
+            <span>Srednia</span>
+            <strong id="averageItem">0,00 zl</strong>
+          </div>
+        </div>
+
+        <details class="sync-panel">
+          <summary>
+            <span>Wspolne dane</span>
+            <strong id="syncStatus">lokalnie</strong>
+          </summary>
+          <form id="syncForm" class="sync-form">
+            <label>
+              Supabase URL
+              <input id="syncUrlInput" name="syncUrl" placeholder="https://twoj-projekt.supabase.co" />
+            </label>
+            <label>
+              Klucz anon
+              <input id="syncKeyInput" name="syncKey" placeholder="eyJ..." />
+            </label>
+            <label>
+              ID skarbonki
+              <input id="syncVaultInput" name="syncVault" placeholder="np. domowe-oszczednosci-2026" />
+            </label>
+            <div class="sync-actions">
+              <button class="primary-button" type="submit">Polacz</button>
+              <button class="ghost-button" id="pullButton" type="button">Pobierz</button>
+              <button class="ghost-button" id="pushButton" type="button">Wyslij</button>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <section class="workspace" aria-label="Lista oszczednosci">
+        <form class="entry-form" id="savingForm">
+          <div class="form-grid">
+            <label>
+              Nazwa
+              <input id="nameInput" name="name" placeholder="np. Konto oszczednosciowe" required />
+            </label>
+            <label>
+              Kwota
+              <input id="amountInput" name="amount" inputmode="decimal" placeholder="np. 1500,50" required />
+            </label>
+            <label>
+              Miejsce
+              <input id="placeInput" name="place" placeholder="np. bank, gotowka, lokata" />
+            </label>
+            <label>
+              Kategoria
+              <select id="categoryInput" name="category">
+                <option>Poduszka finansowa</option>
+                <option>Lokaty</option>
+                <option>Inwestycje</option>
+                <option>Gotowka</option>
+                <option>Inne</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="primary-button" type="submit" id="submitButton">Dodaj oszczednosc</button>
+            <button class="ghost-button" type="button" id="cancelEdit" hidden>Anuluj edycje</button>
+          </div>
+        </form>
+
+        <div class="toolbar">
+          <label class="search-box">
+            Szukaj
+            <input id="searchInput" placeholder="nazwa, miejsce albo kategoria" />
+          </label>
+          <div class="toolbar-actions">
+            <button class="ghost-button" id="exportButton" type="button">Eksport</button>
+            <label class="ghost-button file-label">
+              Import
+              <input id="importInput" type="file" accept="application/json" />
+            </label>
+          </div>
+        </div>
+
+        <div class="category-strip" id="categoryStrip" aria-label="Podsumowanie kategorii"></div>
+
+        <div class="empty-state" id="emptyState">
+          <h2>Dodaj pierwsza pozycje</h2>
+          <p>Wpisz nazwe i kwote, a aplikacja policzy laczna wartosc Twoich oszczednosci.</p>
+        </div>
+
+        <div class="savings-list" id="savingsList"></div>
+      </section>
+    </main>
+
+    <template id="savingTemplate">
+      <article class="saving-item">
+        <div>
+          <h3></h3>
+          <p></p>
+        </div>
+        <strong></strong>
+        <div class="item-actions">
+          <button type="button" data-action="edit">Edytuj</button>
+          <button type="button" data-action="delete">Usun</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
