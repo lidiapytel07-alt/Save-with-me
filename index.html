@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fff8fb" />
+    <title>Moje oszczednosci</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Wspolna skarbonka</p>
+          <h1>Moje oszczednosci</h1>
+        </div>
+        <div class="top-actions">
+          <button class="theme-button" id="themeToggle" type="button" aria-label="Zmien motyw" title="Zmien motyw">
+            <span id="themeLabel">Dark</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="focus-band" aria-labelledby="totalTitle">
+        <div class="focus-mark" aria-hidden="true">
+          <span>PLN</span>
+        </div>
+        <div>
+          <p class="eyebrow">Razem</p>
+          <h2 id="totalTitle"><span id="totalSavings">0,00 zl</span></h2>
+          <p id="goalLabel">Cel nieustawiony</p>
+        </div>
+        <div class="progress-card" aria-label="Postep celu">
+          <strong id="goalPercent">0%</strong>
+          <span>celu</span>
+        </div>
+      </section>
+
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" id="goalProgress"></div>
+      </div>
+
+      <section class="stats-grid" aria-label="Podsumowanie">
+        <article>
+          <span id="itemsCount">0</span>
+          <p>pozycji</p>
+        </article>
+        <article>
+          <span id="averageItem">0,00 zl</span>
+          <p>srednia</p>
+        </article>
+        <article>
+          <span id="biggestItem">-</span>
+          <p>najwieksza</p>
+        </article>
+      </section>
+
+      <details class="sync-panel">
+        <summary>
+          <span>Wspolne dane</span>
+          <strong id="syncStatus">lokalnie</strong>
+        </summary>
+        <form id="syncForm" class="sync-form">
+          <label>
+            <span>Supabase URL</span>
+            <input id="syncUrlInput" name="syncUrl" placeholder="https://twoj-projekt.supabase.co" />
+          </label>
+          <label>
+            <span>Klucz anon</span>
+            <input id="syncKeyInput" name="syncKey" placeholder="eyJ..." />
+          </label>
+          <label>
+            <span>ID skarbonki</span>
+            <input id="syncVaultInput" name="syncVault" placeholder="np. domowe-oszczednosci-2026" />
+          </label>
+          <div class="sync-actions">
+            <button class="primary-button" type="submit">Synchronizuj</button>
+          </div>
+        </form>
+      </details>
+
+      <section class="long-goals-section" aria-labelledby="categoriesTitle">
+        <div class="section-title">
+          <p class="eyebrow">Kategorie</p>
+          <h2 id="categoriesTitle">Gdzie sa Twoje pieniadze</h2>
+        </div>
+        <div class="category-strip" id="categoryStrip" aria-label="Podsumowanie kategorii"></div>
+      </section>
+
+      <form class="composer" id="savingForm">
+        <div class="section-title">
+          <p class="eyebrow">Nowy wpis</p>
+          <h2 id="formTitle">Dodaj oszczednosc</h2>
+        </div>
+        <label>
+          <span>Nazwa</span>
+          <input id="nameInput" name="name" placeholder="np. Konto oszczednosciowe" required />
+        </label>
+        <div class="form-row">
+          <label>
+            <span>Kwota</span>
+            <input id="amountInput" name="amount" inputmode="decimal" placeholder="np. 1500,50" required />
+          </label>
+          <label>
+            <span>Miejsce</span>
+            <input id="placeInput" name="place" placeholder="np. bank, gotowka, lokata" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>
+            <span>Kategoria</span>
+            <select id="categoryInput" name="category">
+              <option>Poduszka finansowa</option>
+              <option>Lokaty</option>
+              <option>Inwestycje</option>
+              <option>Gotowka</option>
+              <option>Inne</option>
+            </select>
+          </label>
+          <div class="goal-form" id="goalForm">
+            <label for="goalInput">
+              <span>Cel oszczedzania</span>
+              <span class="goal-control">
+                <input id="goalInput" name="goal" inputmode="decimal" placeholder="np. 25000" />
+                <button id="goalSubmit" type="button">Ustaw</button>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="primary-button" type="submit" id="submitButton">Dodaj oszczednosc</button>
+          <button class="secondary-button" type="button" id="cancelEdit" hidden>Anuluj</button>
+        </div>
+      </form>
+
+      <nav class="tabs" aria-label="Akcje i wyszukiwanie">
+        <label class="search-box">
+          <span>Szukaj</span>
+          <input id="searchInput" placeholder="nazwa, miejsce albo kategoria" />
+        </label>
+        <button class="tab" id="exportButton" type="button">Eksport</button>
+        <label class="tab file-label">
+          Import
+          <input id="importInput" type="file" accept="application/json" />
+        </label>
+      </nav>
+
+      <section class="list-section" aria-label="Lista oszczednosci">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-mark" aria-hidden="true">PLN</div>
+          <h2>Zacznij od pierwszej kwoty.</h2>
+          <p>Dodaj oszczednosc, a aplikacja policzy laczna wartosc i zsynchronizuje dane.</p>
+        </div>
+        <ul class="savings-list" id="savingsList"></ul>
+      </section>
+    </main>
+
+    <template id="savingTemplate">
+      <li class="saving-item item-card">
+        <button class="check-button" type="button" data-action="edit" aria-label="Edytuj"></button>
+        <div class="item-content">
+          <div class="item-heading">
+            <h3></h3>
+            <span class="type-pill">Oszczednosc</span>
+          </div>
+          <p></p>
+          <div class="item-meta">
+            <span class="amount-pill"></span>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="edit-button" type="button" data-action="edit">Edytuj</button>
+          <button class="delete-button" type="button" data-action="delete" aria-label="Usun" title="Usun">x</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
